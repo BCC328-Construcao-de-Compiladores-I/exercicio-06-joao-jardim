@@ -1,0 +1,12 @@
+x := 0;
+def x := 1 in
+    a := x + 1 ;
+    print(a);
+    def x := 5 in
+        a := x - 1;
+        print(a);
+    end
+    print(x);
+end
+read("Digite o valor de x:", x);
+print("O valor de x ao quadrado é:" + (x * x));

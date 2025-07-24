@@ -14,7 +14,6 @@ import System.Environment
 import System.FilePath
 import System.IO (writeFile)
 import System.Process
-import System.Exit -- Adicionado para importar ExitSuccess e ExitFailure
 
 main :: IO ()
 main = do
@@ -115,7 +114,7 @@ v1Compiler file = do
     Left err -> putStrLn $ "Erro de análise semântica: " ++ err
     Right checkedAst -> do
       putStrLn "Análise semântica executada com sucesso.\n"
-      let v1Code = v1Codegen checkedAst
+      let v1Code = genV1Code checkedAst
       let outputFile = replaceExtension file "v1"
       writeFile outputFile (pretty v1Code)
       putStrLn $ "Código V1 gerado com sucesso em: " ++ outputFile
@@ -181,6 +180,6 @@ parseOptions args =
     ("--lexer-only" : arg : _) -> [Lexer arg]
     ("--parse-only" : arg : _) -> [Parser arg]
     ("--interpret" : arg : _) -> [Interpret arg]
-    ("--v1" : arg : _) -> [V1Compile arg]
-    ("--c" : arg : _) -> [CCompile arg]
+    ("--v1-compile" : arg : _) -> [V1Compile arg]
+    ("--c-compile" : arg : _) -> [CCompile arg]
     _ -> [Help]

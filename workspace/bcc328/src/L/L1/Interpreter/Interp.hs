@@ -9,7 +9,7 @@ import L.L1.Frontend.Syntax
 import Utils.Pretty
 import Utils.Value 
 import Utils.Var 
-
+import System.IO (hFlush, stdout)
 type Env = Map Var Value 
 
 evalL1 :: L1 -> IO (Either String Env) 
@@ -24,6 +24,7 @@ evalS1 :: Env -> S1 -> IO (Either String Env)
 evalS1 env (LRead s v)
   = do 
       putStr s 
+      hFlush stdout
       val <- readValue
       pure (Right $ Map.insert v val env)
 evalS1 env (LPrint e)
@@ -57,3 +58,17 @@ evalE1 env (LMul l1 l2)
       v1 <- evalE1 env l1
       v2 <- evalE1 env l2
       v1 .*. v2
+evalE1 env (LMinus l1 l2) 
+  = do 
+      v1 <- evalE1 env l1
+      v2 <- evalE1 env l2 
+      v1 .-. v2
+evalE1 env (LDiv l1 l2) 
+  = do 
+      v1 <- evalE1 env l1
+      v2 <- evalE1 env l2 
+      v1 ./. v2
+evalE1 _ (LString s) 
+  = Right (VStr s)
+evalE1 env (LExpr e) 
+  = evalE1 env e

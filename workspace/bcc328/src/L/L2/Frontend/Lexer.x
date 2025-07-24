@@ -1,6 +1,6 @@
 {
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
-module L.L1.Frontend.Lexer (Token (..), Lexeme (..), lexer) where 
+module L.L2.Frontend.Lexer (Token (..), Lexeme (..), lexer) where 
 }
 
 %wrapper "posn"
@@ -20,6 +20,9 @@ tokens :-
   @string               {mkString}  -- Strings
   read                  {simpleToken TRead}  -- Reserved word "read"
   print                 {simpleToken TPrint} -- Reserved word "print"
+  def                   {simpleToken TDef}   -- Reserved word "def" 
+  in                    {simpleToken TIn}    -- Reserved word "in" 
+  end                   {simpleToken TEnd}   -- Reserved word "end" 
   @ident                {mkIdent}   -- Identifiers
   ":="                  {simpleToken TAssign}  -- Assignment
   "+"                   {simpleToken TPlus}    -- Addition
@@ -44,6 +47,9 @@ data Lexeme
   | TIdent String
   | TRead
   | TPrint
+  | TDef 
+  | TIn 
+  | TEnd 
   | TAssign
   | TPlus
   | TMinus
