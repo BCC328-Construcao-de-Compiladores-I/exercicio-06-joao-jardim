@@ -15,6 +15,8 @@ int main () {
     }
     printf("Digite o valor de x:\n");
     scanf("%d", &x);
-    printf("%d\n", (0 + (x * x)));
+    printf("%s", "O valor de x ao quadrado eh:");
+    printf("%d\n", (x * x));
+    printf("%s\n", "Te amo meu amor");
     return 0;
 }

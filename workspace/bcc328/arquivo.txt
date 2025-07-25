@@ -7,6 +7,8 @@ def x := 1 in
         print(a);
     end
     print(x);
-end
+end 
+
 read("Digite o valor de x:", x);
-print("O valor de x ao quadrado é:" + (x * x));
+print("O valor de x ao quadrado eh:" + (x * x));
+print("Te amo meu amor");

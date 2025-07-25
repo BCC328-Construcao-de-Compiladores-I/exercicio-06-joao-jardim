@@ -25,10 +25,19 @@ cL2Codegen (L2 ss) = unlines $
 -- Gera código C para um comando S2
 generateStmt :: S2 -> [String]
 generateStmt (LAssign v e) = ["int " ++ pretty v ++ " = " ++ generateExp e ++ ";"]
+
 generateStmt (LRead s v) = [ "printf(\"" ++ s ++ "\\n\");"
                            , "scanf(\"%d\", &" ++ pretty v ++ ");"
                            ]
-generateStmt (LPrint e) = ["printf(\"%d\\n\", " ++ generateExp e ++ ");"]
+  
+generateStmt (LPrint e) = 
+  case e of 
+    LString s -> ["printf(\"%s\\n\", " ++ generateExp e ++ ");"]
+    LAdd (LString s) e2 -> ["printf(\"%s\", " ++ "\"" ++ s ++ "\"" ++ ");"
+                           , "printf(\"%d\\n\", " ++ generateExp e2 ++ ");"]
+    LAdd e1 (LString s) -> ["printf(\"%d\", " ++ generateExp e1 ++ ");"
+                            , "printf(\"%s\\n\", " ++ "\"" ++ s ++ "\"" ++ ");"]
+    _         -> ["printf(\"%d\\n\", " ++ generateExp e ++ ");"]
 generateStmt (Def v e ss) = ["{"]
                           ++ indent 4 ["int " ++ pretty v ++ " = " ++ generateExp e ++ ";"] 
                           ++ concatMap (indent 4 . generateStmt) ss
@@ -38,7 +47,7 @@ generateStmt (Def v e ss) = ["{"]
 generateExp :: E2 -> String
 generateExp (LVal (VInt n)) = show n
 generateExp (LVar v) = pretty v
-generateExp (LString s) = "0" -- Simplificação, pois C requer tipo compatível (pode ser ajustado para char* se necessário)
+generateExp (LString s) = "\"" ++ s ++ "\"" -- Simplificação, pois C requer tipo compatível (pode ser ajustado para char* se necessário)
 generateExp (LAdd e1 e2) = "(" ++ generateExp e1 ++ " + " ++ generateExp e2 ++ ")"
 generateExp (LMinus e1 e2) = "(" ++ generateExp e1 ++ " - " ++ generateExp e2 ++ ")"
 generateExp (LMul e1 e2) = "(" ++ generateExp e1 ++ " * " ++ generateExp e2 ++ ")"
